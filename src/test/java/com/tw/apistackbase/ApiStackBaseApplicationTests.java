@@ -1,6 +1,7 @@
 package com.tw.apistackbase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tw.apistackbase.controller.Company;
 import com.tw.apistackbase.controller.Employee;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -95,9 +96,9 @@ public class ApiStackBaseApplicationTests {
 	@Test
 	public void should_get_all_companys_when_get_all() throws Exception {
 		final MvcResult mvcResult = this.mockMvc.perform(get("/companies")).andExpect(status().isOk()).andReturn();
-		JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
-		assertEquals("alibaba",jsonObject.getString("companyName"));
-		assertEquals(2,jsonObject.getInt("employeeNumber"));
+		JSONArray jsonArray = new JSONArray(mvcResult.getResponse().getContentAsString());
+		assertEquals("alibaba",jsonArray.getJSONObject(0).getString("companyName"));
+		assertEquals(2,jsonArray.getJSONObject(0).getInt("employeeNumber"));
 	}
 
 	@Test
@@ -114,6 +115,32 @@ public class ApiStackBaseApplicationTests {
 		assertEquals(20,jsonArray.getJSONObject(0).getInt("age"));
 		assertEquals("lisi",jsonArray.getJSONObject(0).getString("name"));
 		assertEquals("male",jsonArray.getJSONObject(0).getString("gender"));
+	}
+	@Test
+	public void should_get_companys_when_give_page_and_pagesize() throws Exception {
+		final MvcResult mvcResult = this.mockMvc.perform(get("/companies?page=1&pagesize=5")).andExpect(status().isOk()).andReturn();
+		JSONArray jsonArray = new JSONArray(mvcResult.getResponse().getContentAsString());
+		assertEquals("alibaba",jsonArray.getJSONObject(0).getString("companyName"));
+		assertEquals(2,jsonArray.getJSONObject(0).getInt("employeeNumber"));
+	}
+	@Test
+	public void should_get_201_when_post_a_company() throws Exception {
+		Company company = new Company("huawei",2);
+		//final MvcResult mvcResult = this.mockMvc.perform(post("/employees",employee)).andReturn();
+		this.mockMvc.perform(post("/companies") .content(asJsonString(company))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated());
+	}
+	@Test
+	public void should_return_company_when_put_a_id_and_company() throws Exception {
+		Company company = new Company("mayualibaba",1);
+		final MvcResult mvcResult = this.mockMvc.perform(put("/companies/1") .content(asJsonString(company))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn();
+		JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
+		assertEquals("mayualibaba",jsonObject.getString("companyName"));
 	}
 	public static String asJsonString(final Object obj) {
 		try {
