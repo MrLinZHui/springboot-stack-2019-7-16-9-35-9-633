@@ -64,6 +64,7 @@ public class HelloResource {
     }
     @GetMapping(path = "/gender")
     public ResponseEntity gender(String gender){
+        List<Employee> employeeList = new ArrayList<>();
         log.info("gender:%s"+gender);
         employeeList.add(new Employee(1,"lisi",20,"male"));
         employeeList.add(new Employee(2,"wangwu",20,"male"));
@@ -86,6 +87,7 @@ public class HelloResource {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity nodify(@PathVariable int id,@RequestBody Employee employee){
+        List<Employee> employeeList = new ArrayList<>();
         Employee employee3 = new Employee(1,"lingling",19,"male");
         employeeList.add(employee3);
         Employee employee1 = new Employee();

@@ -92,6 +92,14 @@ public class ApiStackBaseApplicationTests {
 		//final MvcResult mvcResult = this.mockMvc.perform(post("/employees",employee)).andReturn();
 		this.mockMvc.perform(delete("/employees/1")).andExpect(status().isOk());
 	}
+	@Test
+	public void should_get_all_companys_when_get_all() throws Exception {
+		final MvcResult mvcResult = this.mockMvc.perform(get("/companies")).andExpect(status().isOk()).andReturn();
+		JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
+		assertEquals("alibaba",jsonObject.getString("companyName"));
+		assertEquals(2,jsonObject.getInt("employeeNumber"));
+	}
+
 	public static String asJsonString(final Object obj) {
 		try {
 			return new ObjectMapper().writeValueAsString(obj);
