@@ -1,5 +1,7 @@
 package com.tw.apistackbase;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tw.apistackbase.controller.Employee;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -8,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,6 +59,28 @@ public class ApiStackBaseApplicationTests {
 		assertEquals(1,jsonObject.getJSONArray("employees").getJSONObject(0).getInt("id"));
 		assertEquals("lisi",jsonObject.getJSONArray("employees").getJSONObject(0).getString("name"));
 		assertEquals(20,jsonObject.getJSONArray("employees").getJSONObject(0).getInt("age"));
+	}
+	@Test
+	public void should_return_JsonArrays_when_get_gender() throws Exception {
+		final MvcResult mvcResult = this.mockMvc.perform(get("/employees/gender?gender=male")).andExpect(status().isOk()).andReturn();
+		JSONArray jsonArray = new JSONArray(mvcResult.getResponse().getContentAsString());
+		assertEquals(2,jsonArray.length());
+	}
+	@Test
+	public void should_get_201_when_post_a_employee() throws Exception {
+		Employee employee = new Employee(1,"lingling",18,"women");
+		//final MvcResult mvcResult = this.mockMvc.perform(post("/employees",employee)).andReturn();
+		this.mockMvc.perform(post("/employees") .content(asJsonString(employee))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated());
+	}
+	public static String asJsonString(final Object obj) {
+		try {
+			return new ObjectMapper().writeValueAsString(obj);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	@Test
 	public void contextLoads() {

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Created by jxzhong on 18/08/2017.
@@ -61,8 +62,24 @@ public class HelloResource {
         jsonpObject.put("employees",employees);
         return ResponseEntity.ok(jsonpObject);
     }
+    @GetMapping(path = "/gender")
+    public ResponseEntity gender(String gender){
+        log.info("gender:%s"+gender);
+        employeeList.add(new Employee(1,"lisi",20,"male"));
+        employeeList.add(new Employee(2,"wangwu",20,"male"));
+        employeeList.add(new Employee(3,"linliu",20,"woman"));
+        List<Employee> employees = new ArrayList<>();
+//        for(Employee employee:employeeList){
+//            if(employee.getGender().equals(gender)){
+//                employees.add(employee);
+//            }
+//        }
+        employees = employeeList.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
+        return ResponseEntity.ok(employees);
+    }
     @PostMapping
     public ResponseEntity created(@RequestBody Employee employee){
+        log.info("employee:"+employee);
         employeeList.add(employee);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
