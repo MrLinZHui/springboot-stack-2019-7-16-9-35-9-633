@@ -1,5 +1,5 @@
 package com.tw.apistackbase.controller;
-
+import net.sf.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +24,43 @@ public class HelloResource {
 //    }
     @GetMapping("")
     public ResponseEntity getAll(){
+        List<Employee> employeeList = new ArrayList();
         employeeList.add(new Employee(0,"zhangsan",18,"male"));
         return ResponseEntity.ok().body(employeeList);
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity getOne(@PathVariable int id){
+        Employee employee = null;
+        employeeList.add(new Employee(1,"lisi",20,"male"));
+        for(Employee employee1: employeeList){
+            if(id==employee1.getId()){
+                employee = employee1;
+                break;
+            }
+        }
+       return ResponseEntity.ok(employee);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity page(int page,Integer pagesize){
+        employeeList.add(new Employee(1,"lisi",20,"male"));
+        employeeList.add(new Employee(2,"wangwu",20,"male"));
+        JSONObject jsonpObject = new JSONObject();
+        jsonpObject.put("page",page);
+        jsonpObject.put("pagesize",pagesize);
+        List<Employee> employees =new ArrayList<>();
+        int count = 0;
+        for(int i = (page-1)*pagesize;i<employeeList.size();i++){
+            if(count==pagesize){
+                break;
+            }
+            employees.add(employeeList.get(i));
+            count++;
+        }
+        jsonpObject.put("employees",employees);
+        return ResponseEntity.ok(jsonpObject);
+    }
     @PostMapping
     public ResponseEntity created(@RequestBody Employee employee){
         employeeList.add(employee);
