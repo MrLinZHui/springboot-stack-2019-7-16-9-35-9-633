@@ -108,6 +108,21 @@ public class HandleCompany {
         }
         return ResponseEntity.ok(company1);
     }
-
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity deleteEmployee(@PathVariable int id){
+        List<Company> companyList = new ArrayList<>();
+        Company company3 = new Company("alibaba",1);
+        Employee employee =new Employee(1,"lisi",20,"male");
+        Employee employee1 = new Employee(2,"wangwu",20,"male");
+        company3.addEmployees(employee);
+        company3.addEmployees(employee1);
+        companyList.add(company3);
+        for(int i = 0; i<companyList.size();i++){
+            if(companyList.get(i).getCompanyId()== id){
+                companyList.remove(companyList.get(i));
+            }
+        }
+        return ResponseEntity.ok(companyList);
+    }
 
 }

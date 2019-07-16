@@ -150,6 +150,12 @@ public class ApiStackBaseApplicationTests {
 		}
 	}
 	@Test
+	public void should_get_201_when_delete_a_id_from_companys() throws Exception {
+		//Employee employee = new Employee(1,"lingling",18,"women");
+		//final MvcResult mvcResult = this.mockMvc.perform(post("/employees",employee)).andReturn();
+		this.mockMvc.perform(delete("/companies/1")).andExpect(status().isOk());
+	}
+	@Test
 	public void contextLoads() {
 
 	}
