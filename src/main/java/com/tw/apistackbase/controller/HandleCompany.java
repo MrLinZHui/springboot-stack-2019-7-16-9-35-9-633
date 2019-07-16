@@ -19,7 +19,7 @@ public class HandleCompany {
     @GetMapping("")
     public ResponseEntity companys(){
         List<Company> companyList = new ArrayList<>();
-        Company company = new Company("alibaba");
+        Company company = new Company("alibaba",1);
         Employee employee =new Employee(1,"lisi",20,"male");
         Employee employee1 = new Employee(2,"wangwu",20,"male");
         company.addEmployees(employee);
@@ -32,18 +32,30 @@ public class HandleCompany {
         return ResponseEntity.ok(jsonpObject);
     }
     @GetMapping("/{id}")
-    public ResponseEntity getcompany(@PathVariable ){
+    public ResponseEntity getcompany(@PathVariable int id){
         List<Company> companyList = new ArrayList<>();
-        Company company = new Company("alibaba");
+        Company company = new Company("alibaba",1);
+        Company company2 = new Company("huawei",2);
         Employee employee =new Employee(1,"lisi",20,"male");
         Employee employee1 = new Employee(2,"wangwu",20,"male");
         company.addEmployees(employee);
         company.addEmployees(employee1);
-        JSONObject jsonpObject = new JSONObject();
-        jsonpObject.put("companyName",company.getCompanyName());
-        jsonpObject.put("employeeNumber",company.getEmployeeList().size());
-        jsonpObject.put("employeeNumber",company.getEmployeeList().size());
-        jsonpObject.put("employees",company.getEmployeeList());
-        return ResponseEntity.ok(jsonpObject);
+        companyList.add(company);
+        Company company1 = companyList.stream().filter(company3 -> company3.getCompanyId()==id).collect(Collectors.toList()).get(0);
+        return ResponseEntity.ok(company1);
+    }
+    @GetMapping("/{id}/employees")
+    public ResponseEntity getemployees(@PathVariable int id){
+        List<Company> companyList = new ArrayList<>();
+        Company company = new Company("alibaba",1);
+        Company company2 = new Company("huawei",2);
+        Employee employee =new Employee(1,"lisi",20,"male");
+        Employee employee1 = new Employee(2,"wangwu",20,"male");
+        company.addEmployees(employee);
+        company.addEmployees(employee1);
+        companyList.add(company);
+        Company company1 = companyList.stream().filter(company3 -> company3.getCompanyId()==id).collect(Collectors.toList()).get(0);
+
+        return ResponseEntity.ok(company1.getEmployeeList());
     }
 }

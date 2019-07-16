@@ -100,6 +100,21 @@ public class ApiStackBaseApplicationTests {
 		assertEquals(2,jsonObject.getInt("employeeNumber"));
 	}
 
+	@Test
+	public void should_get_one_company_when_give_a_id() throws Exception {
+		final MvcResult mvcResult = this.mockMvc.perform(get("/companies/1")).andExpect(status().isOk()).andReturn();
+		JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
+		assertEquals("alibaba",jsonObject.getString("companyName"));
+		assertEquals(1,jsonObject.getInt("companyId"));
+	}
+	@Test
+	public void should_get_one_employess_when_give_a_id() throws Exception {
+		final MvcResult mvcResult = this.mockMvc.perform(get("/companies/1/employees")).andExpect(status().isOk()).andReturn();
+		JSONArray jsonArray = new JSONArray(mvcResult.getResponse().getContentAsString());
+		assertEquals(20,jsonArray.getJSONObject(0).getInt("age"));
+		assertEquals("lisi",jsonArray.getJSONObject(0).getString("name"));
+		assertEquals("male",jsonArray.getJSONObject(0).getString("gender"));
+	}
 	public static String asJsonString(final Object obj) {
 		try {
 			return new ObjectMapper().writeValueAsString(obj);
