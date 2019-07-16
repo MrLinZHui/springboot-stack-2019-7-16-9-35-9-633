@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,6 +73,24 @@ public class ApiStackBaseApplicationTests {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated());
+	}
+	@Test
+	public void should_return_employee_when_put_a_id_and_employee() throws Exception {
+		Employee employee = new Employee(1,"lingling",18,"women");
+		final MvcResult mvcResult = this.mockMvc.perform(put("/employees/1") .content(asJsonString(employee))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn();
+		JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
+		assertEquals(18,jsonObject.getInt("age"));
+		assertEquals("lingling",jsonObject.getString("name"));
+		assertEquals("women",jsonObject.getString("gender"));
+	}
+	@Test
+	public void should_get_201_when_delete_a_id() throws Exception {
+		Employee employee = new Employee(1,"lingling",18,"women");
+		//final MvcResult mvcResult = this.mockMvc.perform(post("/employees",employee)).andReturn();
+		this.mockMvc.perform(delete("/employees/1")).andExpect(status().isOk());
 	}
 	public static String asJsonString(final Object obj) {
 		try {

@@ -84,17 +84,21 @@ public class HelloResource {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
-    public ResponseEntity nodify(@RequestBody Employee employee){
+    @PutMapping(path = "/{id}")
+    public ResponseEntity nodify(@PathVariable int id,@RequestBody Employee employee){
+        Employee employee3 = new Employee(1,"lingling",19,"male");
+        employeeList.add(employee3);
+        Employee employee1 = new Employee();
         for(int i = 0; i<employeeList.size();i++){
-            if(employeeList.get(i).getId()==employee.getId()){
+            if(employeeList.get(i).getId()==id){
                 employeeList.get(i).setAge(employee.getAge());
                 employeeList.get(i).setGender(employee.getGender());
                 employeeList.get(i).setName(employee.getName());
+                employee1 = employeeList.get(i);
             }
             break;
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(employee1);
     }
 
     @DeleteMapping(path = "/{id}")
