@@ -24,27 +24,23 @@ public class HelloResource {
 //        return ResponseEntity.ok("Hello:" + userName);
 //    }
     @GetMapping("")
-    public ResponseEntity getAll(){
-        List<Employee> employeeList = new ArrayList();
-        employeeList.add(new Employee(0,"zhangsan",18,"male"));
-        return ResponseEntity.ok().body(employeeList);
-    }
-
-    @GetMapping(path = "/{id}")
-    public ResponseEntity getOne(@PathVariable int id){
-        Employee employee = null;
-        employeeList.add(new Employee(1,"lisi",20,"male"));
-        for(Employee employee1: employeeList){
-            if(id==employee1.getId()){
-                employee = employee1;
-                break;
-            }
+    public ResponseEntity getAll(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "0") int pagesize,
+                                 @RequestParam(value = "gender",required = false) String gender){
+        if(gender!=null){
+            List<Employee> employeeList = new ArrayList<>();
+            employeeList.add(new Employee(1,"lisi",20,"male"));
+            employeeList.add(new Employee(2,"wangwu",20,"male"));
+            employeeList.add(new Employee(3,"linliu",20,"woman"));
+            List<Employee> employees = new ArrayList<>();
+            employees = employeeList.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
+            return ResponseEntity.ok(employees);
         }
-       return ResponseEntity.ok(employee);
-    }
-
-    @GetMapping("/page")
-    public ResponseEntity page(int page,Integer pagesize){
+        if(page==0&&pagesize==0) {
+            List<Employee> employeeList = new ArrayList();
+            employeeList.add(new Employee(0, "zhangsan", 18, "male"));
+            return ResponseEntity.ok().body(employeeList);
+        }
         employeeList.add(new Employee(1,"lisi",20,"male"));
         employeeList.add(new Employee(2,"wangwu",20,"male"));
         JSONObject jsonpObject = new JSONObject();
@@ -62,22 +58,20 @@ public class HelloResource {
         jsonpObject.put("employees",employees);
         return ResponseEntity.ok(jsonpObject);
     }
-    @GetMapping(path = "/gender")
-    public ResponseEntity gender(String gender){
-        List<Employee> employeeList = new ArrayList<>();
-        log.info("gender:%s"+gender);
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity getOne(@PathVariable int id){
+        Employee employee = null;
         employeeList.add(new Employee(1,"lisi",20,"male"));
-        employeeList.add(new Employee(2,"wangwu",20,"male"));
-        employeeList.add(new Employee(3,"linliu",20,"woman"));
-        List<Employee> employees = new ArrayList<>();
-//        for(Employee employee:employeeList){
-//            if(employee.getGender().equals(gender)){
-//                employees.add(employee);
-//            }
-//        }
-        employees = employeeList.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
-        return ResponseEntity.ok(employees);
+        for(Employee employee1: employeeList){
+            if(id==employee1.getId()){
+                employee = employee1;
+                break;
+            }
+        }
+       return ResponseEntity.ok(employee);
     }
+
     @PostMapping
     public ResponseEntity created(@RequestBody Employee employee){
         log.info("employee:"+employee);

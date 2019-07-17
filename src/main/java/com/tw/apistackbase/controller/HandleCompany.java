@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 public class HandleCompany {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @GetMapping("")
-    public ResponseEntity companys(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "0") int pagesize) {
+    public ResponseEntity companys(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "0") int pagesize) {
         List<Company> companyList = new ArrayList<>();
         Company company = new Company("alibaba", 1);
         Employee employee = new Employee(1, "lisi", 20, "male");

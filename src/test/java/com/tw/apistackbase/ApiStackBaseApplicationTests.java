@@ -52,7 +52,7 @@ public class ApiStackBaseApplicationTests {
 	}
 	@Test
 	public void should_return_JsonArrays_when_get_page_and_pagesize() throws Exception {
-		final MvcResult mvcResult = this.mockMvc.perform(get("/employees/page?page=1&pagesize=5")).andExpect(status().isOk()).andReturn();
+		final MvcResult mvcResult = this.mockMvc.perform(get("/employees?page=1&pagesize=5")).andExpect(status().isOk()).andReturn();
 		JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
 		assertEquals(1,jsonObject.getInt("page"));
 		assertEquals(5,jsonObject.getInt("pagesize"));
@@ -62,7 +62,7 @@ public class ApiStackBaseApplicationTests {
 	}
 	@Test
 	public void should_return_JsonArrays_when_get_gender() throws Exception {
-		final MvcResult mvcResult = this.mockMvc.perform(get("/employees/gender?gender=male")).andExpect(status().isOk()).andReturn();
+		final MvcResult mvcResult = this.mockMvc.perform(get("/employees?gender=male")).andExpect(status().isOk()).andReturn();
 		JSONArray jsonArray = new JSONArray(mvcResult.getResponse().getContentAsString());
 		assertEquals(2,jsonArray.length());
 	}
